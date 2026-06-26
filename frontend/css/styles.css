@@ -1,0 +1,67 @@
+/* ─────────────────────────────────────────────
+   styles.css — Estilos base GameVault
+   Vinicio: aquí va el diseño principal
+───────────────────────────────────────────── */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-bg:      #1a1a2e;
+  --color-surface: #16213e;
+  --color-purple:  #6c4ab6;
+  --color-blue:    #4a90d9;
+  --color-teal:    #2ecc71;
+  --color-text:    #e0e0e0;
+  --color-muted:   #8888aa;
+  --color-border:  #2a2a4a;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--color-surface);
+  border-bottom: 2px solid var(--color-purple);
+}
+
+.navbar-brand {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--color-purple);
+}
+
+.navbar-links a {
+  color: var(--color-text);
+  text-decoration: none;
+  margin-left: 1.5rem;
+}
+
+.navbar-links a:hover {
+  color: var(--color-purple);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Vinicio: agrega más estilos aquí */

@@ -1,0 +1,19 @@
+# ── Entorno ───────────────────────────────────
+.env
+*.env.local
+
+# ── Node ──────────────────────────────────────
+node_modules/
+npm-debug.log*
+
+# ── Docker volumes locales ────────────────────
+pgdata/
+
+# ── OS ────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Editores ──────────────────────────────────
+.vscode/
+.idea/
+*.swp
