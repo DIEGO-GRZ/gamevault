@@ -1,13 +1,10 @@
 // ─────────────────────────────────────────────
 //  services/cheapSharkService.js
-//  Diego: consulta precios de juegos en tiendas digitales
-//  Documentación: https://apidocs.cheapshark.com
 // ─────────────────────────────────────────────
 const fetch = require('node-fetch');
 
 const BASE_URL = 'https://www.cheapshark.com/api/1.0';
 
-// Busca el precio más bajo de un juego por nombre
 async function getGamePrice(gameName) {
   try {
     const res = await fetch(
@@ -19,15 +16,15 @@ async function getGamePrice(gameName) {
     if (!games.length) return null;
 
     const game = games[0];
+
     return {
-      name:       game.external?.steam ? gameName : game.info?.title,
-      cheapestPrice: parseFloat(game.cheapestPriceEver?.price || 0),
-      currentPrice:  parseFloat(game.deals?.[0]?.price || 0),
-      storeId:       game.deals?.[0]?.storeID,
-      dealUrl:       `https://www.cheapshark.com/redirect?dealID=${game.deals?.[0]?.dealID}`,
+      currentPrice:  parseFloat(game.cheapest || 0),
+      cheapestPrice: parseFloat(game.cheapestPriceEver?.price || game.cheapest || 0),
+      dealUrl: game.cheapestDealID
+        ? `https://www.cheapshark.com/redirect?dealID=${decodeURIComponent(game.cheapestDealID)}`
+        : null,
     };
   } catch {
-    // Si CheapShark falla, no rompemos la página de detalle
     return null;
   }
 }

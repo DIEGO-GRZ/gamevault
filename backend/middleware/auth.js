@@ -1,20 +1,38 @@
 // ─────────────────────────────────────────────
-//  middleware/auth.js — Verificación de JWT
-//  Andrés: aplica este middleware en rutas protegidas
-//  Uso: router.get('/ruta', authMiddleware, handler)
+//  services/twitchAuth.js
+//  El token se renueva automáticamente cuando expira
 // ─────────────────────────────────────────────
-const jwt = require('jsonwebtoken');
+const fetch = require('node-fetch');
 
-module.exports = function authMiddleware(req, res, next) {
-  const token = req.cookies?.token;
-  if (!token) {
-    return res.status(401).json({ message: 'No autenticado' });
+let cachedToken  = null;
+let tokenExpires = 0;
+
+async function getTwitchToken() {
+  // Si el token sigue vigente, reutilizarlo
+  if (cachedToken && Date.now() < tokenExpires) {
+    return cachedToken;
   }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { id, username, email }
-    next();
-  } catch {
-    return res.status(401).json({ message: 'Token inválido o expirado' });
-  }
-};
+
+  // Las credenciales van en la URL (forma que acepta Twitch)
+  const params = new URLSearchParams({
+    client_id:     process.env.TWITCH_CLIENT_ID,
+    client_secret: process.env.TWITCH_CLIENT_SECRET,
+    grant_type:    'client_credentials',
+  });
+
+  const res = await fetch(`https://id.twitch.tv/oauth2/token?${params}`, {
+    method: 'POST',
+  });
+
+  if (!res.ok) throw new Error(`Twitch auth falló: ${res.status}`);
+
+  const data = await res.json();
+  cachedToken  = data.access_token;
+  // Renovar 60 segundos antes de que expire
+  tokenExpires = Date.now() + (data.expires_in - 60) * 1000;
+
+  console.log('🔑 Token de Twitch obtenido, expira en', data.expires_in, 'segundos');
+  return cachedToken;
+}
+
+module.exports = { getTwitchToken };
