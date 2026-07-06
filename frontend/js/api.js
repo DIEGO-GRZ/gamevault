@@ -3,6 +3,10 @@
 //  Vinicio: importa este archivo en cada página
 // ─────────────────────────────────────────────
 
+// Este archivo contendrá las peticiones fetch reales conectadas a los endpoints de Andrés.
+// Recuerden incluir { credentials: 'include' } en peticiones protegidas para heredar la cookie JWT.
+console.log("Módulo API cargado y listo para integración.");
+
 const API_URL = 'http://localhost:3000/api';
 
 async function apiFetch(endpoint, options = {}) {
