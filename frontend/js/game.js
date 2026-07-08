@@ -16,7 +16,7 @@ async function renderGameDetailView(container, gameId) {
                         <div style="background: #1e1e24; padding: 1rem; border-radius: 6px; margin-top: 1rem; border-left: 4px solid #22c55e;">
                             <span style="color: #a1a1aa; font-size: 0.9rem;">Mejor Oferta (CheapShark API):</span>
                             <strong style="display: block; font-size: 1.2rem; color: #22c55e;">
-                                ${game.price ? `Disponible a $${game.price} USD` : 'Precio no disponible actualmente'}
+                                ${game.price?.currentPrice ? `Disponible a $${game.price.currentPrice} USD` : 'Precio no disponible actualmente'}
                             </strong>
                         </div>
 
@@ -31,17 +31,23 @@ async function renderGameDetailView(container, gameId) {
                     </div>
                     <div style="display: flex; gap: 1rem;">
                         <input type="text" id="ai-query-input" placeholder="¿Cómo derroto al primer jefe?" style="flex: 1; padding: 0.7rem; background: #09090b; color: white; border: 1px solid #3f3f46; border-radius: 4px;">
-                        <button onclick="askGeminiAI(${gameId}, '${game.name}')" style="background: var(--primary-color); color: white; padding: 0.7rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Consultar</button>
+                        <button id="ai-submit-btn" style="background: var(--primary-color); color: white; padding: 0.7rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Consultar</button>
                     </div>
                 </div>
             </div>
         `;
+
+        // Asignar evento DESPUÉS de que el HTML ya está en la página
+        window._currentGame = { id: gameId, name: game.name };
+        document.getElementById('ai-submit-btn').addEventListener('click', () => {
+            askGeminiAI(window._currentGame.id, window._currentGame.name);
+        });
+
     } catch (error) {
         container.innerHTML = `<div style="padding: 2rem;"><h2 style="color:#ef4444;">Error al cargar los detalles del juego.</h2></div>`;
     }
 }
 
-// Acción del chat usando Gemini a través de la API compartida
 async function askGeminiAI(id, gameName) {
     const input = document.getElementById('ai-query-input');
     const chatBox = document.getElementById('ai-chat-box');
@@ -52,11 +58,10 @@ async function askGeminiAI(id, gameName) {
     input.value = '';
 
     try {
-        // Llama a la función de tips que Andrés y Diego configuraron
         const response = await TipsAPI.askAI({ gameId: id, gameName: gameName, question: query });
-        chatBox.innerHTML = `<strong>Tú:</strong> ${query}<br><br><strong>✨ Gemini AI:</strong> ${response.text || response.message}`;
+        chatBox.innerHTML = `<strong>Tú:</strong> ${query}<br><br><strong>✨ Gemini AI:</strong> ${response.answer}`;
     } catch (error) {
-        chatBox.innerHTML = `<span style="color: #ef4444;">Error al conectar con el servicio de IA. Asegúrate de configurar la GEMINI_API_KEY.</span>`;
+        chatBox.innerHTML = `<span style="color: #ef4444;">Error al conectar con el servicio de IA.</span>`;
     }
 }
 
