@@ -73,5 +73,7 @@ ON CONFLICT DO NOTHING;
 INSERT INTO tips (user_id, igdb_id, title, content, category) VALUES
   (1, 1942, 'Tip de speedrun para Dark Souls',   'Usa el glitch de la escalera en el primer castillo para saltarte 3 jefes.', 'speedrun'),
   (1, 1942, 'Cómo vencer al primer jefe fácil',  'Ataca por la izquierda y rueda hacia la derecha cuando levante el hacha.', 'jefe'),
-  (2, 1942, 'Consejo para principiantes',         'No te rindas. Cada muerte te enseña algo. Aprende los patrones.', 'general')
+  (2, 1942, 'Consejo para principiantes',         'No te rindas. Cada muerte te enseña algo. Aprende los patrones.', 'general'),
+  (2, 1942, 'Farmear almas rápido al inicio',     'Vuelve una y otra vez al primer grupo de enemigos cerca de la hoguera, dan buenas almas y respawnean.', 'coleccionables'),
+  (1, 1942, 'Logro oculto del final secreto',     'Necesitas cumplir 3 condiciones específicas antes del jefe final para desbloquear el true ending.', 'logros')
 ON CONFLICT DO NOTHING;
