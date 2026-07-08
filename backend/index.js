@@ -1,32 +1,40 @@
-// ─────────────────────────────────────────────
-//  index.js — Punto de entrada del servidor
-//  Andrés: aquí registras tus rutas
-// ─────────────────────────────────────────────
 require('dotenv').config();
-const express    = require('express');
-const cors       = require('cors');
+const express = require('express');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 const app = express();
 
-// ── Middleware ────────────────────────────────
+const allowedOrigins = [
+  'http://localhost',
+  'http://localhost:80',
+  'http://127.0.0.1',
+  'http://127.0.0.1:80',
+  'http://localhost:3000',
+  'http://localhost:5500',
+  'http://127.0.0.1:5500'
+];
+
 app.use(cors({
-  origin: 'http://localhost',
-  credentials: true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Origen no permitido por CORS'));
+  },
+  credentials: true
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 
-// ── Rutas (Andrés) ────────────────────────────
-app.use('/api/auth',    require('./routes/auth'));
-app.use('/api/games',   require('./routes/games'));
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/games', require('./routes/games'));
 app.use('/api/library', require('./routes/library'));
-app.use('/api/tips',    require('./routes/tips'));
-app.use('/api/ai',      require('./routes/ai'));
+app.use('/api/tips', require('./routes/tips'));
+app.use('/api/ai', require('./routes/ai'));
 
-// ── Health check ──────────────────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
-// ── Start ─────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Backend corriendo en puerto ${PORT}`));
