@@ -3,7 +3,7 @@
 //  Andrés: recibe la pregunta del frontend y llama el servicio de Diego
 // ─────────────────────────────────────────────
 const router = require('express').Router();
-const auth   = require('../middleware/auth');
+  
 const { getAITip } = require('../services/aiTipsService');
 
 // POST /api/ai/tips
