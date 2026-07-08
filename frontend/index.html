@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GameVault</title>
-  <link rel="stylesheet" href="css/styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameVault - Plataforma de Biblioteca y Guías</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-  <nav class="navbar">
-    <div class="navbar-brand">🎮 GameVault</div>
-    <div class="navbar-links">
-      <a href="index.html">Inicio</a>
-      <a href="pages/search.html">Buscar</a>
-      <a href="pages/library.html">Mi Biblioteca</a>
-      <span id="nav-auth">
-        <a href="pages/login.html">Login</a>
-        <a href="pages/register.html">Registro</a>
-      </span>
-    </div>
-  </nav>
+    <nav class="navbar">
+        <div class="nav-logo" onclick="navigateTo('/')">🎮 GameVault</div>
+        <div class="nav-search">
+            <input type="text" id="global-search-input" placeholder="Buscar videojuegos...">
+            <button onclick="triggerGlobalSearch()">Buscar</button>
+        </div>
+        <div class="nav-links" id="nav-links">
+            <a href="#" onclick="navigateTo('/')">Inicio</a>
+            <a href="#" onclick="navigateTo('/library')">Mi Biblioteca</a>
+            <a href="#" onclick="navigateTo('/login')">Iniciar Sesión</a>
+        </div>
+    </nav>
 
-  <main class="container">
-    <h1>Juegos Populares</h1>
-    <div id="popular-games" class="games-grid">
-      <!-- Vinicio: aquí se renderizan las cards de juegos populares -->
-      <p>Cargando juegos...</p>
-    </div>
-  </main>
+    <main id="main-content">
+        </main>
 
-  <script src="js/api.js"></script>
-  <script src="js/home.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/library.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/register.js"></script>
+    <script src="js/search.js"></script>
+    
+    <script src="js/app.js"></script>
 </body>
 </html>
