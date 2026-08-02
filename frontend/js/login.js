@@ -11,6 +11,7 @@ function renderLoginView(container) {
                     <label style="display:block; margin-bottom:0.4rem; font-size:0.9rem;">Contraseña</label>
                     <input type="password" id="login-pass" required style="width:100%; padding:0.6rem; background:#09090b; color:white; border:1px solid #3f3f46; border-radius:4px; box-sizing:border-box;">
                 </div>
+                <p id="login-error" style="color:#ef4444; font-size:0.85rem; display:none; margin-bottom:1rem;"></p>
                 <button type="submit" style="width:100%; padding:0.7rem; background:var(--primary-color); color:white; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Ingresar</button>
             </form>
             <p style="margin-top:1.5rem; font-size:0.85rem; text-align:center; color:var(--text-muted);">¿No tienes cuenta? <a href="#" onclick="navigateTo('/register')" style="color:var(--primary-color); text-decoration:none;">Regístrate aquí</a></p>
@@ -18,8 +19,19 @@ function renderLoginView(container) {
     `;
 }
 
-function executeLogin(e) {
+async function executeLogin(e) {
     e.preventDefault();
-    alert("Login Exitoso. Tu navegador recibirá la cookie JWT de Andrés de manera automática.");
-    navigateTo('/');
+
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-pass').value;
+    const errorEl = document.getElementById('login-error');
+    errorEl.style.display = 'none';
+
+    try {
+        await AuthAPI.login({ email, password });
+        navigateTo('/');
+    } catch (error) {
+        errorEl.textContent = error.message || 'No se pudo iniciar sesión.';
+        errorEl.style.display = 'block';
+    }
 }

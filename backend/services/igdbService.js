@@ -20,14 +20,29 @@ async function igdbRequest(endpoint, body) {
   return res.json();
 }
 
+// ── Normaliza cover.url -> image plano ───────
+// IGDB regresa "//images.igdb.com/.../t_thumb/xxx.jpg" (sin protocolo, tamaño chico).
+// El frontend espera un campo `image` plano y usable directamente en <img src>.
+function coverToImage(cover) {
+  if (!cover?.url) return null;
+  const secure = cover.url.startsWith('//') ? `https:${cover.url}` : cover.url;
+  return secure.replace('t_thumb', 't_cover_big');
+}
+
+function formatGame(game) {
+  if (!game) return game;
+  return { ...game, image: coverToImage(game.cover) };
+}
+
 // ── Juegos populares para el Home ────────────
 async function getPopularGames() {
-  return igdbRequest('/games',
+  const games = await igdbRequest('/games',
     `fields name,cover.url,rating,genres.name,platforms.name,summary;
      sort rating desc;
      where rating != null & cover != null & rating_count > 100;
      limit 20;`
   );
+  return games.map(formatGame);
 }
 
 // ── Búsqueda por nombre + filtros ────────────
@@ -36,12 +51,13 @@ async function searchGames(query, genre = '', platform = '') {
   if (genre)    filters += ` & genres.name = "${genre}"`;
   if (platform) filters += ` & platforms.name = "${platform}"`;
 
-  return igdbRequest('/games',
+  const games = await igdbRequest('/games',
     `fields name,cover.url,rating,genres.name,platforms.name,summary;
      search "${query}";
      ${filters};
      limit 20;`
   );
+  return games.map(formatGame);
 }
 
 // ── Detalle completo de un juego ─────────────
@@ -52,7 +68,7 @@ async function getGameById(igdbId) {
             first_release_date,screenshots.url,videos.video_id;
      where id = ${igdbId};`
   );
-  return results[0] || null;
+  return formatGame(results[0] || null);
 }
 
 // ── Lista de géneros disponibles ─────────────

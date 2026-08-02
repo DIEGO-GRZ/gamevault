@@ -32,14 +32,9 @@ router.get('/search', async (req, res) => {
 router.get('/:igdbId', async (req, res) => {
   const { igdbId } = req.params;
   try {
-    // Llamadas en paralelo para mayor velocidad
-    const [game, price] = await Promise.all([
-      igdb.getGameById(igdbId),
-      cheap.getGamePrice('').catch(() => null), // Diego: pasar el nombre del juego
-    ]);
+    const game = await igdb.getGameById(igdbId);
     if (!game) return res.status(404).json({ message: 'Juego no encontrado' });
 
-    // Llamar CheapShark con el nombre real del juego
     const priceData = await cheap.getGamePrice(game.name).catch(() => null);
     res.json({ ...game, price: priceData });
   } catch (err) {

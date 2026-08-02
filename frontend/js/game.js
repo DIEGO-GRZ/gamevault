@@ -12,7 +12,7 @@ async function renderGameDetailView(container, gameId) {
                         <span style="background: var(--primary-color); padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem;">IGDB ID: ${gameId}</span>
                         <h1 style="margin: 0.5rem 0 1rem 0;">${game.name}</h1>
                         <p style="color: #a1a1aa; line-height: 1.6;">${game.summary || 'Sin sinopsis disponible.'}</p>
-                        
+
                         <div style="background: #1e1e24; padding: 1rem; border-radius: 6px; margin-top: 1rem; border-left: 4px solid #22c55e;">
                             <span style="color: #a1a1aa; font-size: 0.9rem;">Mejor Oferta (CheapShark API):</span>
                             <strong style="display: block; font-size: 1.2rem; color: #22c55e;">
@@ -36,6 +36,15 @@ async function renderGameDetailView(container, gameId) {
                 </div>
             </div>
         `;
+<<<<<<< Updated upstream
+=======
+
+        window._currentGame = { id: gameId, name: game.name };
+        document.getElementById('ai-submit-btn').addEventListener('click', () => {
+            askGeminiAI(window._currentGame.id, window._currentGame.name);
+        });
+
+>>>>>>> Stashed changes
     } catch (error) {
         container.innerHTML = `<div style="padding: 2rem;"><h2 style="color:#ef4444;">Error al cargar los detalles del juego.</h2></div>`;
     }
@@ -62,7 +71,7 @@ async function askGeminiAI(id, gameName) {
 
 async function addGameToLibrary(id) {
     try {
-        await LibraryAPI.add(id, 'Pendiente');
+        await LibraryAPI.add(id, 'pending');
         alert("¡Juego agregado con éxito!");
     } catch (error) {
         alert("Inicia sesión para poder agregar juegos a tu biblioteca.");

@@ -11,11 +11,10 @@ async function renderHomeView(container) {
     const grid = document.getElementById('popular-games-grid');
 
     try {
-        // LLAMADA REAL A TU API.JS
         const popularGames = await GamesAPI.popular();
-        
+
         if (popularGames.length === 0) {
-            grid.innerHTML = `<p style="color: var(--text-muted);">No se encontraron juegos populares en este momento.</p> text`;
+            grid.innerHTML = `<p style="color: var(--text-muted);">No se encontraron juegos populares en este momento.</p>`;
             return;
         }
 
@@ -25,10 +24,9 @@ async function renderHomeView(container) {
                 <h3>${game.name}</h3>
             </div>
         `).join('');
-        
+
     } catch (error) {
         console.error(error);
-        // Manejo de error solicitado por el checklist (ej: si cae IGDB)
         grid.innerHTML = `<p style="color: #ef4444;">⚠️ No se pudieron cargar los juegos. Inténtalo más tarde.</p>`;
     }
 }
