@@ -36,15 +36,6 @@ async function renderGameDetailView(container, gameId) {
                 </div>
             </div>
         `;
-<<<<<<< Updated upstream
-=======
-
-        window._currentGame = { id: gameId, name: game.name };
-        document.getElementById('ai-submit-btn').addEventListener('click', () => {
-            askGeminiAI(window._currentGame.id, window._currentGame.name);
-        });
-
->>>>>>> Stashed changes
     } catch (error) {
         container.innerHTML = `<div style="padding: 2rem;"><h2 style="color:#ef4444;">Error al cargar los detalles del juego.</h2></div>`;
     }
