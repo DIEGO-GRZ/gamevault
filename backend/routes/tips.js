@@ -4,7 +4,7 @@
 // ─────────────────────────────────────────────
 const router = require('express').Router();
 const db     = require('../middleware/db');
-const auth   = require('../middleware/auth');
+const auth   = require('../middleware/jwtAuth');
 
 // GET /api/tips/:igdbId — tips públicos de un juego
 router.get('/:igdbId', async (req, res) => {
