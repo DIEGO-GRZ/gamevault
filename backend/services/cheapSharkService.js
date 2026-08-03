@@ -5,10 +5,10 @@ const fetch = require('node-fetch');
 
 const BASE_URL = 'https://www.cheapshark.com/api/1.0';
 
-async function getGamePrice(gameName) {
+async function searchByTitle(title) {
   try {
     const res = await fetch(
-      `${BASE_URL}/games?title=${encodeURIComponent(gameName)}&limit=1`
+      `${BASE_URL}/games?title=${encodeURIComponent(title)}&limit=1`
     );
     if (!res.ok) return null;
 
@@ -27,6 +27,30 @@ async function getGamePrice(gameName) {
   } catch {
     return null;
   }
+}
+
+// Corta el título en el primer ":" o "-" seguido de espacio.
+// "The Witcher 3: Wild Hunt - Game of the Year Edition" -> "The Witcher 3"
+// Los subtítulos de edición (GOTY, Complete, Ultimate, etc.) casi nunca
+// están catalogados así en CheapShark, pero el juego base sí.
+function simplifyTitle(name) {
+  return name.split(/\s*[-:]\s+/)[0].trim();
+}
+
+async function getGamePrice(gameName) {
+  if (!gameName) return null;
+
+  // Intento 1: título completo tal cual viene de IGDB
+  const exactMatch = await searchByTitle(gameName);
+  if (exactMatch) return exactMatch;
+
+  // Intento 2: título simplificado (sin subtítulo de edición)
+  const simplified = simplifyTitle(gameName);
+  if (simplified && simplified !== gameName) {
+    return searchByTitle(simplified);
+  }
+
+  return null;
 }
 
 module.exports = { getGamePrice };
