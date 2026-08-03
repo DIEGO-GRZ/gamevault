@@ -10,9 +10,11 @@ async function searchByTitle(title) {
     const res = await fetch(
       `${BASE_URL}/games?title=${encodeURIComponent(title)}&limit=1`
     );
+    console.log(`🔍 CheapShark "${title}" -> status ${res.status}`);
     if (!res.ok) return null;
 
     const games = await res.json();
+    console.log(`🔍 CheapShark "${title}" -> ${games.length} resultado(s)`);
     if (!games.length) return null;
 
     const game = games[0];
@@ -24,7 +26,8 @@ async function searchByTitle(title) {
         ? `https://www.cheapshark.com/redirect?dealID=${decodeURIComponent(game.cheapestDealID)}`
         : null,
     };
-  } catch {
+  } catch (err) {
+    console.error(`❌ CheapShark error para "${title}":`, err.message);
     return null;
   }
 }
